@@ -1,4 +1,6 @@
 import { Component, OnInit } from "@angular/core";
+import { ServicesService } from "../services/services.service";
+import { identifierModuleUrl } from "@angular/compiler";
 
 @Component({
   selector: "app-todo",
@@ -6,36 +8,50 @@ import { Component, OnInit } from "@angular/core";
   styleUrls: ["./todo.component.css"],
 })
 export class TodoComponent implements OnInit {
-  constructor() {}
-  todo = [
-    {
-      title: "Buy Milk",
-      description: "Buy 6pack of Milk at Shoprite",
-      status: "done",
-      dueDate: "01-09-2021",
-    },
-    {
-      title: "Take car to Service",
-      description: "Take Car to Service by 09:00am",
-      status: "done",
-      dueDate: "15-08-2021",
-    },
-    {
-      title: "Cut Lawn",
-      description: "Buy 6pack of Milk at Shoprite",
-      status: "done",
-      dueDate: "01-09-2021",
-    },
-  ];
+  constructor(private api: ServicesService) {}
+  todo = [];
+  newItem;
 
-  public addTodo(name) {
-    var newItem = {
-      title: name,
-      description: "Not Set",
-      status: "Not Set",
-      dueDate: "Not Set",
+  public addTodo(title, description, dueDate) {
+    var id = this.todo.length + 1;
+    const newItem = {
+      id: id,
+      title: title,
+      description: description,
+      status: "New",
+      dueDate: dueDate,
     };
     this.todo.push(newItem);
+    this.addItem(newItem);
   }
-  ngOnInit() {}
+  ngOnInit() {
+    this.getTodoItems();
+  }
+
+  public getTodoItems = () => {
+    this.api.getItems().subscribe(
+      (data) => {
+        this.todo = data;
+        console.log(this.todo);
+      },
+      (error) => {
+        console.log(error.error);
+      }
+    );
+  };
+
+  public addItem = (item) => {
+    this.api.addItem(item).subscribe(
+      () => {
+        console.log("Added succesfully");
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  };
+
+  public deleteItem(item) {
+    this.todo = this.todo.filter((t) => t.title !== item.title);
+  }
 }

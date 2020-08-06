@@ -1,19 +1,38 @@
+<h1>Schedular App</h1>
 <div class="page-content page-container" id="page-content">
   <div class="padding">
     <div class="row container d-flex justify-content-center">
       <div class="col-lg-12">
         <div class="card px-3">
           <div class="card-body">
-            <h4 class="card-title">Schedular</h4>
+            <h1 class="card-title">Schedular</h1>
             <div class="add-items d-flex">
               <input
                 type="text"
-                #newItem
+                #title
+                class="form-control todo-list-input"
+                placeholder="What do you need to do today?"
+              />
+              <input
+                type="text"
+                #description
+                class="form-control todo-list-input"
+                placeholder="What do you need to do today?"
+              />
+              <input
+                type="date"
+                #dueDate
+                value=""
                 class="form-control todo-list-input"
                 placeholder="What do you need to do today?"
               />
               <button
-                (click)="addTodo(newItem.value)"
+                (click)="
+                  addTodo(title.value, description.value, dueDate.value);
+                  title.value = '';
+                  description.value = '';
+                  dueDate.value = ''
+                "
                 class="add btn btn-primary font-weight-bold todo-list-add-btn"
               >
                 Add
@@ -28,6 +47,7 @@
                     <th scope="col">Description</th>
                     <th scope="col">Status</th>
                     <th scope="col">Due Date</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -37,6 +57,9 @@
                     <td>{{ item.description }}</td>
                     <td>{{ item.status }}</td>
                     <td>{{ item.dueDate }}</td>
+                    <td>
+                      <button (click)="deleteItem(item)">Remove</button>
+                    </td>
                   </tr>
                 </tbody>
               </table>
