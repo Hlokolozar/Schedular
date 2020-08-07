@@ -1,4 +1,9 @@
 <h1>Schedular App</h1>
+<div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+  <div class="example-box" *ngFor="let movie of movies" cdkDrag>
+    {{ movie }}
+  </div>
+</div>
 <div class="page-content page-container" id="page-content">
   <div class="padding">
     <div class="row container d-flex justify-content-center">
@@ -17,14 +22,14 @@
                 type="text"
                 #description
                 class="form-control todo-list-input"
-                placeholder="What do you need to do today?"
+                placeholder="Notes"
               />
               <input
                 type="date"
                 #dueDate
                 value=""
                 class="form-control todo-list-input"
-                placeholder="What do you need to do today?"
+                placeholder="When?"
               />
               <button
                 (click)="
@@ -52,13 +57,55 @@
                 </thead>
                 <tbody>
                   <tr *ngFor="let item of todo; let x = index">
-                    <th scope="row">{{ x + 1 }}</th>
-                    <td>{{ item.title }}</td>
-                    <td>{{ item.description }}</td>
-                    <td>{{ item.status }}</td>
-                    <td>{{ item.dueDate }}</td>
+                    <td scope="row">{{ x + 1 }}</td>
+                    <td (dblclick)="editItem(item)">
+                      {{ item.title }}
+                      <div *ngIf="item.editing">
+                        <input type="text" [(ngModel)]="item.title" autofocus />
+                      </div>
+                    </td>
                     <td>
-                      <button (click)="deleteItem(item)">Remove</button>
+                      {{ item.description }}
+                      <div *ngIf="item.editing">
+                        <input type="text" [(ngModel)]="item.description" />
+                      </div>
+                    </td>
+                    <td>
+                      {{ item.status }}
+                      <div *ngIf="item.editing">
+                        <select [(ngModel)]="item.status">
+                          <option>New</option>
+                          <option>Completed</option>
+                          <option>Cancelled</option>
+                        </select>
+                      </div>
+                    </td>
+                    <td>
+                      {{ item.dueDate }}
+                      <div *ngIf="item.editing">
+                        <input type="date" [(ngModel)]="item.title" />
+                      </div>
+                    </td>
+                    <td>
+                      <a
+                        *ngIf="!item.editing"
+                        class="btn btn-default"
+                        (click)="deleteItem(item)"
+                      >
+                        <i class="fa fa-trash"></i>
+                      </a>
+                      <a
+                        *ngIf="!item.editing; else editingItem"
+                        class="btn btn-default"
+                        (click)="editItem(item)"
+                      >
+                        <i class="fa fa-pencil"></i>
+                      </a>
+                      <ng-template #editingItem>
+                        <a class="btn btn-default" (click)="doneEditing(item)">
+                          <i class="fa fa-check"></i>
+                        </a>
+                      </ng-template>
                     </td>
                   </tr>
                 </tbody>

@@ -479,3 +479,6 @@ input[type="checkbox"] {
   .dropdown-item {
   display: flex !important;
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
